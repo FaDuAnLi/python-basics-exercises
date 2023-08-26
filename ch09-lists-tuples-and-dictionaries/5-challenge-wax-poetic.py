@@ -54,57 +54,48 @@ adverb = [
 ]
 
 
+def give_me_some(lst, num):
+    """return a list made of num element of a given list, ensuring there are no duplicates"""
+    result = []
+
+    for i in range(num):
+        picked = random.choice(lst)
+        # We ensure that this element was not picked already
+        while picked in result:
+            picked = random.choice(lst)
+        result.append(picked)
+    return result
+
+
+def right_article(adj):
+    """Depending of the first letter of a given article, send back article a or an"""
+    vowel = ("a", "e", "i", "o", "u")
+    if adj[0] in vowel:
+        return "an"
+    else:
+        return "a"
+
+
 def make_poem():
     """Create a randomly generated poem, returned as a multi-line string."""
-    # Pull three nouns randomly
-    n1 = random.choice(noun)
-    n2 = random.choice(noun)
-    n3 = random.choice(noun)
-    # Make sure that all the nouns are different
-    while n1 == n2:
-        n2 = random.choice(noun)
-    while n1 == n3 or n2 == n3:
-        n3 = random.choice(noun)
+    # Pull nouns, verbs, adj, prep and adv as requested
+    nouns = give_me_some(noun, 3)
+    verbs = give_me_some(verb, 3)
+    adjectives = give_me_some(adjective, 3)
+    prepositions = give_me_some(preposition, 2)
+    adv = give_me_some(adverb, 1)
 
-    # Pull three different verbs
-    v1 = random.choice(verb)
-    v2 = random.choice(verb)
-    v3 = random.choice(verb)
-    while v1 == v2:
-        v2 = random.choice(verb)
-    while v1 == v3 or v2 == v3:
-        v3 = random.choice(verb)
-
-    # Pull three different adjectives
-    adj1 = random.choice(adjective)
-    adj2 = random.choice(adjective)
-    adj3 = random.choice(adjective)
-    while adj1 == adj2:
-        adj2 = random.choice(adjective)
-    while adj1 == adj3 or adj2 == adj3:
-        adj3 = random.choice(adjective)
-
-    # Pull two different prepositions
-    prep1 = random.choice(preposition)
-    prep2 = random.choice(preposition)
-    while prep1 == prep2:
-        prep2 = random.choice(preposition)
-
-    # Pull one adverb
-    adv1 = random.choice(adverb)
-
-    if "aeiou".find(adj1[0]) != -1:  # First letter is a vowel
-        article = "An"
-    else:
-        article = "A"
-
+    # Prepare the right articles
+    first_article = right_article(adjectives[0])
+    second_article = right_article(adjectives[2])
+    
     # Create the poem
     poem = (
-        f"{article} {adj1} {n1}\n\n"
-        f"{article} {adj1} {n1} {v1} {prep1} the {adj2} {n2}\n"
-        f"{adv1}, the {n1} {v2}\n"
-        f"the {n2} {v3} {prep2} a {adj3} {n3}"
-    )
+        f"{first_article.capitalize()} {adjectives[0]} {nouns[0]}"
+        f"\n\n{first_article.capitalize()} {adjectives[0]} {nouns[0]} {verbs[0]} {prepositions[0]} the {adjectives[1]} "
+        f"{nouns[1]}\n{adv[0]}, the {nouns[0]} {verbs[1]}"
+        f"\nthe {nouns[1]} {verbs[2]} {prepositions[1]} {second_article} {adjectives[2]} {nouns[2]}"
+        )
 
     return poem
 
